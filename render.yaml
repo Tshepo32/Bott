@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: resume-chatbot
+    env: python
+    runtime: python3
+    plan: free
+
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+
+    healthCheckPath: /
+    numInstances: 1
