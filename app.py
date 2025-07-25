@@ -95,6 +95,11 @@ def simple_keyword_search(query, combined_content):
 
 # --- Flask Routes ---
 
+@app.route('/')
+def health_check():
+    return "OK", 200
+
+
 @app.route('/ask_from_resume', methods=['POST'])
 def ask_from_resume():
     try:
@@ -132,4 +137,4 @@ if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     # In production (Render), Gunicorn will manage the server.
     # For local testing, app.run() is fine.
-    app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(debug=False, host='0.0.0.0', port=port)
