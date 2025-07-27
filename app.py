@@ -127,18 +127,17 @@ def answer_resume_query(query: str):
     elif any(keyword in query for keyword in ["contact", "email", "phone", "reach out", "linkedin", "website", "get in touch"]):
         info = resume_data["personal_info"]
         # Format as clickable Markdown links
-        linkedin_link = f"[LinkedIn Profile]({info['linkedin']})"
-        website_link = f"[Personal Website]({info['website']})"
+        linkedin_link = f"LinkedIn Profile: ({info['linkedin']})"
+        website_link = f"Personal Website: ({info['website']})"
 
         return (f"Check out my {linkedin_link} or my {website_link}.")
 
     # Summary/General profile queries
     elif any(keyword in query for keyword in ["summary", "profile", "about you", "who are you", "tell me about yourself", "lorens", "tshepo", "maleo"]):
         personal_info = resume_data["personal_info"]
-        summary_text = resume_data["summary"]
         linkedin_link = f"[LinkedIn Profile]({personal_info['linkedin']})"
         website_link = f"[Personal Website]({personal_info['website']})"
-        return (f"{summary_text} My full name is {personal_info['name']} and I am based in {personal_info['location']}."
+        return (f"My full name is {personal_info['name']} and I am based in {personal_info['location']}."
                 f"you may also check out my {linkedin_link} or my {website_link}.")
 
     else:
