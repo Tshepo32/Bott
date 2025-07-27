@@ -10,14 +10,21 @@ app = Flask(__name__)
 
 # --- Resume Data Dictionary ---
 resume_data = {
-    "skills": {
+    "personal_info": {
+        "name": "Lorens Tshepo Maleo",
+        "location": "Woodstock, Cape Town",
+        "linkedin": "https://www.linkedin.com/in/lorens-tshepo-m-2533b04a",
+        "website": "https://tshepo32.github.io/personal-website/"
+    },
+
+    "stack": {
         "programming_languages": ["Java", "Python", "C", "SQL"],
         "frameworks_tools": ["Spring Boot", "Flask", "React", "Jinja", "Gunicorn", "RESTful APIs", "Git", "Maven", "npm", "Web Speech API"],
         "databases": ["MySQL", "PostgreSQL"],
         "cloud": ["Render"]
     },
 
-    "education": [
+    "school": [
         {
             "title": "Diploma in ICT Applications Development",
             "year": "2022 - Present",
@@ -71,48 +78,71 @@ resume_data = {
 def answer_resume_query(query: str):
     query = query.lower()
 
-    if "framework" in query or "tool" in query:
-        return ", ".join(resume_data["skills"]["frameworks_tools"])
+    # Skills-related queries
+    if any(keyword in query for keyword in ["framework", "tool", "tools", "stack", "technology", "tech"]):
+        frameworks = ", ".join(resume_data["stack"]["frameworks_tools"])
+        return f"I am skilled with frameworks and tools like: {frameworks}."
 
-    elif "programming language" in query or "code in" in query:
-        return ", ".join(resume_data["skills"]["programming_languages"])
+    elif any(keyword in query for keyword in ["programming language", "code in", "language", "coding"]):
+        languages = ", ".join(resume_data["skills"]["programming_languages"])
+        return f"My programming languages include: {languages}."
 
-    elif "database" in query:
-        return ", ".join(resume_data["skills"]["databases"])
+    elif any(keyword in query for keyword in ["database", "db", "data storage"]):
+        databases = ", ".join(resume_data["skills"]["databases"])
+        return f"I have experience with databases such as: {databases}."
 
-    elif "cloud" in query:
-        return ", ".join(resume_data["skills"]["cloud"])
+    elif any(keyword in query for keyword in ["cloud", "deployment", "hosting"]):
+        cloud_platforms = ", ".join(resume_data["skills"]["cloud"])
+        return f"My cloud platform experience includes: {cloud_platforms}."
 
-    elif "internship" in query:
-        achievements = "; ".join(resume_data["internship"]["achievements"])
-        return f"I interned at {resume_data['internship']['company']} from {resume_data['internship']['duration']}. Key contributions: {achievements}."
+    # Experience/Internship-related queries
+    elif any(keyword in query for keyword in ["internship", "experience", "work", "job", "vacancy"]):
+        internship_info = resume_data["internship"]
+        achievements = "; ".join(internship_info["achievements"])
+        return (f"I completed an internship at {internship_info['company']} from {internship_info['duration']}. "
+                f"Key achievements include: {achievements}.")
 
-    elif "project" in query:
+    # Project-related queries
+    elif any(keyword in query for keyword in ["project", "developed", "built", "website", "chatbot", "system"]):
         projects = resume_data["projects"]
-        return (
-            f"1. Student Enrolment System: {projects['student_enrolment_system']['summary']}\n"
-            f"2. Personal Website with AI Chatbot: {projects['personal_website_ai_chatbot']['summary']}"
-        )
+        response = "Here are details on my key projects:\n"
+        response += f"1. **Student Enrolment System**: {projects['student_enrolment_system']['summary']} (Tech used: {', '.join(projects['student_enrolment_system']['tech'])})\n"
+        response += f"2. **Personal Website with AI Chatbot**: {projects['personal_website_ai_chatbot']['summary']} (Tech used: {', '.join(projects['personal_website_ai_chatbot']['tech'])})"
+        return response
 
-    elif "education" in query or "studies" in query:
-        return "\n".join([
-            f"{edu['title']} ({edu['year']})"
-            for edu in resume_data["education"]
-        ])
+    # Education-related queries
+    elif any(keyword in query for keyword in ["education", "study", "studies", "diploma", "certificate", "school", "university"]):
+        education_details = []
+        for edu in resume_data["school"]:
+            highlights = "; ".join(edu['highlights'])
+            education_details.append(f"- {edu['title']} ({edu['year']}): {highlights}")
+        return "My education includes:\n" + "\n".join(education_details)
 
-    elif "certification" in query:
+    # Certification-related queries
+    elif any(keyword in query for keyword in ["certification", "certified", "cs50x", "harvard"]):
         cert = resume_data["certifications"][0]
-        return f"{cert['title']} by {cert['issuer']} ({cert['year']})"
+        return f"I am certified in {cert['title']} by {cert['issuer']} (completed in {cert['year']})."
 
-    elif "contact" in query or "email" in query or "phone" in query:
+    # Contact information queries
+    elif any(keyword in query for keyword in ["contact", "email", "phone", "reach out", "linkedin", "website", "get in touch"]):
         info = resume_data["personal_info"]
-        return f"You can reach me at {info['email']} or {info['phone']}."
+        # Format as clickable Markdown links
+        linkedin_link = f"[LinkedIn Profile]({info['linkedin']})"
+        website_link = f"[Personal Website]({info['website']})"
 
-    elif "summary" in query or "profile" in query:
-        return resume_data["summary"]
+        return (f"Check out my {linkedin_link} or my {website_link}.")
+
+    # Summary/General profile queries
+    elif any(keyword in query for keyword in ["summary", "profile", "about you", "who are you", "tell me about yourself", "lorens", "tshepo", "maleo"]):
+        personal_info = resume_data["personal_info"]
+        summary_text = resume_data["summary"]
+        linkedin_link = f"[LinkedIn Profile]({personal_info['linkedin']})"
+        website_link = f"[Personal Website]({personal_info['website']})"
+        return (f"{summary_text} My full name is {personal_info['name']} and I am based in {personal_info['location']}."
+                f"you may also check out my {linkedin_link} or my {website_link}.")
 
     else:
-        return "I'm still learning. Could you try asking about my skills, projects, education, or experience?"
+        return "I'm still learning to answer more general questions. Could you try asking more specifically about my skills, projects, education, or experience?"
 
 
 # --- API Endpoint ---
